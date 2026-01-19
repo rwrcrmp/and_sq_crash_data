@@ -64,7 +64,7 @@ build/
 *.json
 
 # CSV data
-*.csv
+# *.csv
 
 # Excel
 *.xlsx
