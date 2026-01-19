@@ -20,7 +20,7 @@ import contextily as ctx
 
 # Read the JSON file into a pandas DataFrame
 # pd.read_json() is similar to jsonlite::fromJSON() in R
-df = pd.read_json("crash_data.json")
+df = pd.read_json("data\crash_data.json")
 
 # Print column names to verify coordinate fields exist
 # This helps us confirm the lat/lon column names
@@ -68,7 +68,7 @@ gdf_filtered = gdf_filtered.to_crs("EPSG:4326")
 
 # Define output directory for shapefile
 # Shapefiles consist of multiple files (.shp, .shx, .dbf, .prj, etc.)
-output_dir = "crash_records_extract"
+output_dir = "outputs\crash_records_extract"
 
 # Create the output directory if it doesn't exist
 # exist_ok=True prevents an error if the directory already exists
@@ -82,6 +82,15 @@ output_path = os.path.join(output_dir, "crash_data.shp")
 gdf_filtered.to_file(output_path)
 
 print(f"Saved {len(gdf_filtered)} records to {output_path}")
+
+# Export to CSV
+# Drop the geometry column since CSV doesn't support spatial data
+# The original lat/lon columns are preserved in the data
+# index=False prevents adding an extra index column
+csv_path = os.path.join(output_dir, "crash_data.csv")
+gdf_filtered.drop(columns=["geometry"]).to_csv(csv_path, index=False)
+
+print(f"Saved {len(gdf_filtered)} records to {csv_path}")
 
 # =============================================================================
 # VISUALIZATION OPTIONS
